@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>CampusHelp | Service desk</title>
+<style>*{box-sizing:border-box}body{background:#edf3f1;color:#17332e;font:16px/1.5 system-ui;margin:auto;max-width:1050px;padding:24px}header,section{padding:24px;background:white;border:1px solid #bccfc9;border-radius:14px;margin-bottom:16px}header{background:#143f36;color:white}header h1{margin:0}h2{margin:0 0 14px}main{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{display:block;font-weight:600;margin:8px 0}input,select,textarea,button{font:inherit;width:100%;padding:9px;border:1px solid #8fa9a2;border-radius:6px}button{background:#165544;color:white;cursor:pointer;margin-top:8px}article{padding:12px 0;border-top:1px solid #bdccc7}output{display:block;margin-top:12px;font-weight:600}small{display:block} @media(max-width:680px){main{display:block}}</style>
+<header><h1>CampusHelp</h1>University service desk · Individual demonstration</header>
+<main><section><h2>Submit a request</h2><form id="request"><label>Student ID<input name="student" required></label><label>Request category<select name="category" required><option value="">Choose category</option><option>IT support</option><option>Classroom maintenance</option><option>Library assistance</option><option>Administrative services</option></select></label><label>Priority<select name="priority" required><option value="">Choose priority</option><option>Low</option><option>Medium</option><option>High</option></select></label><label>Description<textarea name="description" required></textarea></label><button>Submit request</button></form><output id="confirmation" aria-live="polite"></output></section>
+<section><h2>Track a request</h2><form id="track"><label>Request ID<input name="id" placeholder="CH-0001" required></label><button>Check status</button></form><output id="result" aria-live="polite"></output></section></main>
+<section><h2>Administrator dashboard</h2><p id="counts"></p><div id="queue"></div></section><small>Demonstration only. Use fictional data. Requests stay on this page until it is refreshed.</small>
+<script id="model">
+const states=['Open','Ongoing','Completed'];
+const categories=['IT support','Classroom maintenance','Library assistance','Administrative services'];
+const priorities=['Low','Medium','High'];
+const requests=[];
+function submitRequest(student,category,priority,description){
+ if(!student.trim()||!description.trim()||!categories.includes(category)||!priorities.includes(priority))throw Error('Complete all fields.');
+ const id='CH-'+String(requests.length+1).padStart(4,'0');
+ const item={id,student:student.trim(),category,priority,description:description.trim(),owner:'Unassigned',status:'Open'};
+ requests.push(item);return item;
+}
+function lookup(id){return requests.find(item=>item.id===id.trim().toUpperCase());}
+function update(id,owner,status){const item=lookup(id);if(!item||!owner.trim()||!states.includes(status))throw Error('Choose a service owner and status.');Object.assign(item,{owner:owner.trim(),status});}
+function totals(){return states.map(s=>requests.filter(item=>item.status===s).length);}
+</script><script>
+const el=id=>document.getElementById(id);
+function showTracking(){const item=lookup(el('track').elements.namedItem('id').value);el('result').textContent=item?item.id+' · '+item.status+' · '+item.owner:'No matching request.';}
+function selectField(label,values,initial,parent){const l=document.createElement('label'),s=document.createElement('select');l.textContent=label;for(const v of values)s.add(new Option(v,v,false,v===initial));l.append(s);parent.append(l);return s;}
+function render(){el('counts').textContent=states.map((s,i)=>s+' '+totals()[i]).join('  /  ');el('queue').replaceChildren();if(!requests.length)el('queue').textContent='No requests yet.';for(const r of requests){const box=document.createElement('article'),title=document.createElement('strong'),desc=document.createElement('p');title.textContent=[r.id,r.category,r.priority].join(' · ');desc.textContent=r.description;box.append(title,desc);const owner=selectField('Assigned service',['Unassigned',...categories],r.owner,box),status=selectField('Status',states,r.status,box);const save=document.createElement('button');save.textContent='Save update';save.onclick=()=>{update(r.id,owner.value,status.value);render();if(el('track').elements.namedItem('id').value)showTracking();};box.append(save);el('queue').append(box);}}
+el('request').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);try{const r=submitRequest(...['student','category','priority','description'].map(k=>f.get(k)));el('confirmation').textContent='Request received. Your ID is '+r.id+'.';e.target.reset();render();}catch(err){el('confirmation').textContent=err.message;}};
+el('track').onsubmit=e=>{e.preventDefault();showTracking();};render();
+</script></html>
