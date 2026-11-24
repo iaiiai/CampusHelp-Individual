@@ -1,0 +1,13 @@
+ID,Task,Predecessor,Start (2026),Due (2026),Estimated Hours,Priority,Milestone,Owner,Actual Hours
+T01,Develop project charter,None,24 Nov,24 Nov,4,High,M1,iaiiai,
+T02,Gather stakeholder requirements,None,24 Nov,24 Nov,4,High,M1,iaiiai,
+T03,Prepare scope and WBS,T01,25 Nov,25 Nov,4,Medium,M1,iaiiai,
+T04,"Prepare schedule, dependencies and budget",T03,26 Nov,26 Nov,4,High,M2,iaiiai,
+T05,Design initial wireframes,T02,26 Nov,26 Nov,4,Medium,M2,iaiiai,
+T06,Develop risk register and quality plan,T03,27 Nov,27 Nov,4,Medium,M2,iaiiai,
+T07,Create student request interface prototype,T05,30 Nov,30 Nov,4,High,M3,iaiiai,
+T08,Create administrator dashboard prototype,T05,1 Dec,1 Dec,4,High,M3,iaiiai,
+T09,Prepare and execute prototype test cases,"T07, T08",2 Dec,2 Dec,4,High,M3,iaiiai,
+T10,Evaluate and document change request,T04,3 Dec,3 Dec,3,Medium,M4,iaiiai,
+T11,Perform final verification and issue review,"T09, T10",4 Dec,4 Dec,3,High,M4,iaiiai,
+T12,Consolidate final report and closure documents,T11,7 Dec,7 Dec,3,Medium,M4,iaiiai,

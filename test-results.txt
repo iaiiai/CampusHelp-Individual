@@ -1,0 +1,6 @@
+PASS | QA01 | Missing student, category, priority or description rejected. Queue remains empty.
+PASS | QA02 | Four categories accepted and retained.
+PASS | QA03 | All three priorities retained. Invalid priority rejected.
+PASS | QA04 | Seven unique IDs. First record CH-0001, last CH-0007. Confirmation uses returned ID.
+PASS | QA05 | Lookup returns Ongoing and IT support. Unknown ID yields no match.
+PASS | QA06 | Dashboard totals change from 6/1/0 to 6/0/1 with the same seven records.
